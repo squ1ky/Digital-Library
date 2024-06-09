@@ -21,16 +21,23 @@ public class PeopleController {
 
     @GetMapping
     public String findAll(Model model) {
-        return "people/allPeople";
+        model.addAttribute("people", peopleService.findAll());
+        return "/people/allPeople";
     }
 
     @GetMapping("/new")
-    public String create() {
-        return "people/createNew";
+    public String newPerson() {
+        return "/people/createNew";
+    }
+
+    @GetMapping("/{id}")
+    public String findById(Model model, @PathVariable int id) {
+        model.addAttribute("person", peopleService.findById(id));
+        return "/people/personById";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable int id) {
-        return "people/edit";
+        return "/people/edit";
     }
 }
