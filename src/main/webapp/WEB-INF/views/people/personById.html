@@ -7,6 +7,13 @@
 <body>
 
 <h1 th:text="${person.getFullName() + ', ' + person.getYearOfBirth()}">fullNameAndAge</h1>
-
+<br/>
+<hr/>
+<a th:href="@{/people/{id}/edit(id=${person.getId()})}">Edit</a>
+<br/>
+<br/>
+<form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
+    <input type="submit" value="Delete"/>
+</form>
 </body>
 </html>

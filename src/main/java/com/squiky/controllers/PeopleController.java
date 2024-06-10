@@ -1,12 +1,11 @@
 package com.squiky.controllers;
 
+import com.squiky.models.Person;
 import com.squiky.service.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/people")
@@ -26,8 +25,15 @@ public class PeopleController {
     }
 
     @GetMapping("/new")
-    public String newPerson() {
+    public String newPersonPage(Model model) {
+        model.addAttribute("person", new Person());
         return "/people/createNew";
+    }
+
+    @PostMapping("/new")
+    public String create(@ModelAttribute("person") Person person) {
+        peopleService.save(person);
+        return "redirect:/people";
     }
 
     @GetMapping("/{id}")
@@ -37,7 +43,21 @@ public class PeopleController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable int id) {
+    public String editPersonPage(@PathVariable int id, Model model) {
+        model.addAttribute("person", peopleService.findById(id));
         return "/people/edit";
+    }
+
+    @PatchMapping("/{id}")
+    public String edit(@PathVariable int id,
+                       @ModelAttribute("updatedPerson") Person updatedPerson) {
+        peopleService.update(id, updatedPerson);
+        return "redirect:/people";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable int id) {
+        peopleService.deleteById(id);
+        return "redirect:/people";
     }
 }

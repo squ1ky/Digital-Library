@@ -31,4 +31,24 @@ public class PeopleService {
                 id
         );
     }
+
+    public void save(Person person) {
+        String SQL = "INSERT INTO person(fullname, year_of_birth) VALUES(?, ?)";
+        jdbcTemplate.update(SQL, person.getFullName(), person.getYearOfBirth());
+    }
+
+    public void update(int id, Person updatedPerson) {
+        String SQL = "UPDATE person SET fullname = ?, year_of_birth = ? WHERE id = ?";
+        jdbcTemplate.update(
+                SQL,
+                updatedPerson.getFullName(),
+                updatedPerson.getYearOfBirth(),
+                id
+        );
+    }
+
+    public void deleteById(int id) {
+        String SQL = "DELETE FROM person WHERE id = ?";
+        jdbcTemplate.update(SQL, id);
+    }
 }
