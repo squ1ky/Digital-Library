@@ -5,7 +5,10 @@ import com.squiky.service.BooksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/books")
@@ -31,7 +34,10 @@ public class BooksController {
     }
 
     @PostMapping("/new")
-    public String create(@ModelAttribute("book") Book book) {
+    public String create(@ModelAttribute("book") @Valid Book book,
+                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) return "/books/createNew";
+
         booksService.save(book);
         return "redirect:/books";
     }
@@ -50,7 +56,10 @@ public class BooksController {
 
     @PatchMapping("/{id}")
     public String update(@PathVariable int id,
-                         @ModelAttribute("updatedBook") Book updatedBook) {
+                         @ModelAttribute("book") @Valid Book updatedBook,
+                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) return "/books/edit";
+
         booksService.update(id, updatedBook);
         return "redirect:/books";
     }

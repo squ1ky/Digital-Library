@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BooksService {
@@ -24,8 +25,14 @@ public class BooksService {
     }
 
     public Book findById(int id) {
-        String SQL = "SELECT * From Book WHERE id = ?";
+        String SQL = "SELECT * FROM book WHERE id = ?";
         return jdbcTemplate.queryForObject(SQL, new BeanPropertyRowMapper<>(Book.class), id);
+    }
+
+    public Optional<Book> findByTitleAndAuthor(String title, String author) {
+        String SQL = "SELECT * FROM book WHERE title = ? AND author = ?";
+        return jdbcTemplate.query(SQL, new BeanPropertyRowMapper<>(Book.class), title, author).stream()
+                .findAny();
     }
 
     public void save(Book book) {
