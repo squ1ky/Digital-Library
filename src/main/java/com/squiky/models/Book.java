@@ -20,5 +20,5 @@ public class Book {
     @Max(value = 2024, message = "Year of publishing should be 1 - 2024")
     @Min(value = 1, message = "Year of publishing should be 1 - 2024")
     private int yearOfPublishing;
-    private int personOwnerId;
+    private Integer personOwnerId;
 }

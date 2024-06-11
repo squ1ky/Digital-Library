@@ -43,7 +43,7 @@ public class PeopleController {
     }
 
     @GetMapping("/{id}/edit")
-    public String editPersonPage(@PathVariable int id, Model model) {
+    public String editPage(@PathVariable int id, Model model) {
         model.addAttribute("person", peopleService.findById(id));
         return "/people/edit";
     }
