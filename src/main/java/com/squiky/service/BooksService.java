@@ -1,6 +1,7 @@
 package com.squiky.service;
 
 import com.squiky.models.Book;
+import com.squiky.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -68,5 +69,25 @@ public class BooksService {
     public void delete(int id) {
         String SQL = "DELETE FROM book WHERE id = ?";
         jdbcTemplate.update(SQL, id);
+    }
+
+    public void assignToPerson(int bookId, int personId) {
+        String SQL =
+                """
+                UPDATE book
+                SET person_owner_id = ?
+                WHERE id = ?
+                """;
+        jdbcTemplate.update(SQL, personId, bookId);
+    }
+
+    public void makeFree(int bookId) {
+        String SQL =
+                """
+                UPDATE book
+                SET person_owner_id = null
+                WHERE id = ?
+                """;
+        jdbcTemplate.update(SQL, bookId);
     }
 }

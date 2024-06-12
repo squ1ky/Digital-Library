@@ -1,5 +1,6 @@
 package com.squiky.service;
 
+import com.squiky.models.Book;
 import com.squiky.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -50,5 +51,15 @@ public class PeopleService {
     public void deleteById(int id) {
         String SQL = "DELETE FROM person WHERE id = ?";
         jdbcTemplate.update(SQL, id);
+    }
+
+    public List<Book> getBooks(int id) {
+        String SQL =
+                """
+                SELECT book.id, title, author, year_of_publishing
+                FROM book JOIN person ON person.id = book.person_owner_id
+                WHERE person.id = ?
+                """;
+        return jdbcTemplate.query(SQL, new BeanPropertyRowMapper<>(Book.class), id);
     }
 }

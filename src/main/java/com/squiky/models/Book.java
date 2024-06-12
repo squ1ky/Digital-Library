@@ -3,12 +3,14 @@ package com.squiky.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.validation.constraints.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Book {
     private int id;
     @Size(min = 2, max = 200, message = "Title length should be 2 - 200 chars")

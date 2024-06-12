@@ -8,6 +8,10 @@
 
 <h1 th:text="${person.getFullName() + ', ' + person.getYearOfBirth()}">fullNameAndAge</h1>
 <br/>
+<p th:if="${#lists.size(books) == 0}">The person hasn't picked up any books yet</p>
+<hr th:if="${#lists.size(books) > 0}"/>
+<h3 th:if="${#lists.size(books) > 0}">Books:</h3>
+<p th:each="book : ${books}" th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYearOfPublishing()}"></p>
 <hr/>
 <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
     <input type="submit" value="Edit"/>

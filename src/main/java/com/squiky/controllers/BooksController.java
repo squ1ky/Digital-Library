@@ -1,7 +1,9 @@
 package com.squiky.controllers;
 
 import com.squiky.models.Book;
+import com.squiky.models.Person;
 import com.squiky.service.BooksService;
+import com.squiky.service.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,11 +16,14 @@ import javax.validation.Valid;
 @RequestMapping("/books")
 public class BooksController {
 
+    private final PeopleService peopleService;
     private final BooksService booksService;
 
     @Autowired
-    public BooksController(BooksService booksService) {
+    public BooksController(BooksService booksService,
+                           PeopleService peopleService) {
         this.booksService = booksService;
+        this.peopleService = peopleService;
     }
 
     @GetMapping
@@ -44,7 +49,15 @@ public class BooksController {
 
     @GetMapping("/{id}")
     public String find(@PathVariable int id, Model model) {
-        model.addAttribute("book", booksService.findById(id));
+        Book book = booksService.findById(id);
+
+        model.addAttribute("book", book);
+        model.addAttribute("people", peopleService.findAll());
+
+        if (book.getPersonOwnerId() != null) {
+            model.addAttribute("curPerson", peopleService.findById(book.getPersonOwnerId()));
+        }
+
         return "/books/bookById";
     }
 
@@ -67,6 +80,19 @@ public class BooksController {
     @DeleteMapping("/{id}")
     public String delete(@PathVariable int id) {
         booksService.delete(id);
+        return "redirect:/books";
+    }
+
+    @PatchMapping("/{id}/assign")
+    public String assign(@PathVariable("id") int bookId,
+                         @RequestParam("personId") int personId) {
+        booksService.assignToPerson(bookId, personId);
+        return "redirect:/books";
+    }
+
+    @PatchMapping("/{id}/make-free")
+    public String makeFree(@PathVariable("id") int bookId) {
+        booksService.makeFree(bookId);
         return "redirect:/books";
     }
 }

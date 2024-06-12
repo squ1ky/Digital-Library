@@ -39,6 +39,7 @@ public class PeopleController {
     @GetMapping("/{id}")
     public String findById(Model model, @PathVariable int id) {
         model.addAttribute("person", peopleService.findById(id));
+        model.addAttribute("books", peopleService.getBooks(id));
         return "/people/personById";
     }
 
