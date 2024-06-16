@@ -14,8 +14,10 @@ This web application, built using Spring MVC and Thymeleaf, offers a comprehensi
 ```
 - Java 17
 - Spring MVC
+- Spring Data JPA
 - Thymeleaf
 - Postgres
-- JDBCTemplate
+- JDBCTemplate (v1)
+- Hibernate
 - Maven
 ```
