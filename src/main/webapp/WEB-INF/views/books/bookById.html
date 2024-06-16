@@ -11,9 +11,9 @@
 
 <!-- book is available -->
 
-<p th:if="${book.personOwnerId == null}">This book is available. To whom to assign the book?</p>
+<p th:if="${book.getPerson() == null}">This book is available. To whom to assign the book?</p>
 
-<form th:if="${book.personOwnerId == null}" th:method="PATCH" th:action="@{/books/{id}/assign(id=${book.getId()})}">
+<form th:if="${book.getPerson() == null}" th:method="PATCH" th:action="@{/books/{id}/assign(id=${book.getId()})}">
     <label for="people">Select a Person</label>
 
     <select id="people" name="personId">
@@ -25,9 +25,9 @@
 
 <!-- book isn't available -->
 
-<p th:if="${book.personOwnerId != null}" th:text="${curPerson.fullName + ' has the book now'}"></p>
+<p th:if="${book.getPerson() != null}" th:text="${curPerson.fullName + ' has the book now'}"></p>
 
-<form th:if="${book.personOwnerId != null}" th:method="PATCH" th:action="@{/books/{id}/make-free(id=${book.getId()})}">
+<form th:if="${book.getPerson() != null}" th:method="PATCH" th:action="@{/books/{id}/make-free(id=${book.getId()})}">
     <input type="submit" value="Make book free"/>
 </form>
 

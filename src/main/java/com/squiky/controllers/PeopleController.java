@@ -1,5 +1,6 @@
 package com.squiky.controllers;
 
+import com.squiky.models.Book;
 import com.squiky.models.Person;
 import com.squiky.services.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,13 @@ public class PeopleController {
 
     @GetMapping("/{id}")
     public String findById(Model model, @PathVariable int id) {
-        model.addAttribute("person", peopleService.findById(id));
-        model.addAttribute("books", peopleService.getBooks(id));
+        Person person = peopleService.findById(id);
+        for (Book book : person.getBookList()) {
+            System.out.println(book.getTitle());
+        }
+        model.addAttribute("person", person);
+        model.addAttribute("books", person.getBookList());
+
         return "/people/personById";
     }
 

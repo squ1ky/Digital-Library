@@ -1,14 +1,13 @@
 package com.squiky.services;
 
-import com.squiky.models.Book;
 import com.squiky.models.Person;
 import com.squiky.repositories.PeopleRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,7 +25,13 @@ public class PeopleService {
     }
 
     public Person findById(int id) {
-        return peopleRepository.findById(id).orElse(null);
+        Person person = peopleRepository.findById(id).orElse(null);
+
+        if (person != null) {
+            Hibernate.initialize(person.getBookList());
+        }
+
+        return person;
     }
 
     @Transactional
@@ -45,9 +50,4 @@ public class PeopleService {
         peopleRepository.deleteById(id);
     }
 
-    public List<Book> getBooks(int id) {
-        Optional<Person> optionalPerson = peopleRepository.findById(id);
-
-        return optionalPerson.map(Person::getBookList).orElse(null);
-    }
 }
