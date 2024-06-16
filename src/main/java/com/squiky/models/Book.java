@@ -1,26 +1,50 @@
 package com.squiky.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import javax.persistence.*;
+import lombok.*;
 
 import javax.validation.constraints.*;
 
-@Data
+@Entity
+@Table(name = "book")
 @NoArgsConstructor
-@AllArgsConstructor
-@ToString
+@Getter
+@Setter
 public class Book {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
+
+    @Column(name = "title")
     @Size(min = 2, max = 200, message = "Title length should be 2 - 200 chars")
-    @NotEmpty(message = "Title should not be empty")
     private String title;
+
+    @Column(name = "author")
     @Size(min = 2, max = 200, message = "Author name should be 2 - 200 chars")
-    @NotEmpty(message = "Author should not be empty")
     private String author;
+
+    @Column(name = "year_of_publishing")
     @Max(value = 2024, message = "Year of publishing should be 1 - 2024")
     @Min(value = 1, message = "Year of publishing should be 1 - 2024")
     private int yearOfPublishing;
-    private Integer personOwnerId;
+
+    @ManyToOne
+    @JoinColumn(name = "person_owner_id", referencedColumnName = "id")
+    private Person person;
+
+    public Book(String title, String author, int yearOfPublishing) {
+        this.title = title;
+        this.author = author;
+        this.yearOfPublishing = yearOfPublishing;
+        this.person = null;
+    }
+
+    public Book(String title, String author, int yearOfPublishing, Person person) {
+        this.title = title;
+        this.author = author;
+        this.yearOfPublishing = yearOfPublishing;
+        this.person = person;
+    }
 }

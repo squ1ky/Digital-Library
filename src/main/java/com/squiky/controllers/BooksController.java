@@ -1,9 +1,8 @@
 package com.squiky.controllers;
 
 import com.squiky.models.Book;
-import com.squiky.models.Person;
-import com.squiky.service.BooksService;
-import com.squiky.service.PeopleService;
+import com.squiky.services.BooksService;
+import com.squiky.services.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,8 +53,8 @@ public class BooksController {
         model.addAttribute("book", book);
         model.addAttribute("people", peopleService.findAll());
 
-        if (book.getPersonOwnerId() != null) {
-            model.addAttribute("curPerson", peopleService.findById(book.getPersonOwnerId()));
+        if (book.getPerson() != null) {
+            model.addAttribute("curPerson", peopleService.findById(book.getPerson().getId()));
         }
 
         return "/books/bookById";

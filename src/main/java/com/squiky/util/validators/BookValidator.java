@@ -1,7 +1,7 @@
 package com.squiky.util.validators;
 
 import com.squiky.models.Book;
-import com.squiky.service.BooksService;
+import com.squiky.services.BooksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -28,12 +28,12 @@ public class BookValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Book book = (Book) target;
 
-        Optional<Book> bookInStorage = booksService.findByTitleAndAuthor(
+        Book bookInStorage = booksService.findByTitleAndAuthor(
                 book.getTitle(),
                 book.getAuthor()
         );
 
-        if (bookInStorage.isPresent()) {
+        if (bookInStorage != null) {
             errors.rejectValue("titleAndAuthor", "", "This book is already taken");
         }
     }
