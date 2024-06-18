@@ -4,6 +4,8 @@ import javax.persistence.*;
 import lombok.*;
 
 import javax.validation.constraints.*;
+import java.util.Calendar;
+import java.util.Date;
 
 @Entity
 @Table(name = "book")
@@ -34,11 +36,19 @@ public class Book {
     @JoinColumn(name = "person_owner_id", referencedColumnName = "id")
     private Person person;
 
+    @Column(name = "taken_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date takenAt;
+
+    @Transient
+    private boolean expired;
+
     public Book(String title, String author, int yearOfPublishing) {
         this.title = title;
         this.author = author;
         this.yearOfPublishing = yearOfPublishing;
         this.person = null;
+        this.takenAt = null;
     }
 
     public Book(String title, String author, int yearOfPublishing, Person person) {
@@ -46,5 +56,13 @@ public class Book {
         this.author = author;
         this.yearOfPublishing = yearOfPublishing;
         this.person = person;
+        this.takenAt = new Date();
+    }
+
+    public boolean isExpired() {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.add(Calendar.DAY_OF_YEAR, -10);
+        return this.takenAt.before(calendar.getTime());
     }
 }

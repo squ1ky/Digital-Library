@@ -21,7 +21,9 @@ public class PeopleService {
     }
 
     public List<Person> findAll() {
-        return peopleRepository.findAll();
+        return peopleRepository.findAll().stream()
+                .limit(20)
+                .toList();
     }
 
     public Person findById(int id) {
@@ -49,5 +51,4 @@ public class PeopleService {
     public void deleteById(int id) {
         peopleRepository.deleteById(id);
     }
-
 }

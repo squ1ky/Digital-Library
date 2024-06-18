@@ -7,18 +7,35 @@
 <body>
 
 <h1 th:text="${person.getFullName() + ', ' + person.getYearOfBirth()}">fullNameAndAge</h1>
+
 <br/>
+
 <p th:if="${#lists.size(books) == 0}">The person hasn't picked up any books yet</p>
+
 <hr th:if="${#lists.size(books) > 0}"/>
+
 <h3 th:if="${#lists.size(books) > 0}">Books:</h3>
-<p th:each="book : ${books}" th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYearOfPublishing()}"></p>
+
+<div th:each="book : ${books}">
+    <div th:if="${book.isExpired()}">
+        <p style="color:red;" th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYearOfPublishing()}"></p>
+    </div>
+    <div th:if="${book.isExpired() == false}">
+        <p th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYearOfPublishing()}"></p>
+    </div>
+</div>
+
 <hr/>
+
 <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
     <input type="submit" value="Edit"/>
 </form>
+
 <br/>
+
 <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
     <input type="submit" value="Delete"/>
 </form>
+
 </body>
 </html>

@@ -1,12 +1,14 @@
 package com.squiky.controllers;
 
-import com.squiky.models.Book;
 import com.squiky.models.Person;
 import com.squiky.services.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/people")
@@ -26,13 +28,16 @@ public class PeopleController {
     }
 
     @GetMapping("/new")
-    public String newPersonPage(Model model) {
+    public String newPage(Model model) {
         model.addAttribute("person", new Person());
         return "/people/createNew";
     }
 
     @PostMapping("/new")
-    public String create(@ModelAttribute("person") Person person) {
+    public String create(@ModelAttribute("person") @Valid Person person,
+                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) return "/people/createNew";
+
         peopleService.save(person);
         return "redirect:/people";
     }
@@ -40,6 +45,7 @@ public class PeopleController {
     @GetMapping("/{id}")
     public String findById(Model model, @PathVariable int id) {
         Person person = peopleService.findById(id);
+
         model.addAttribute("person", person);
         model.addAttribute("books", person.getBookList());
 
@@ -54,7 +60,10 @@ public class PeopleController {
 
     @PatchMapping("/{id}")
     public String edit(@PathVariable int id,
-                       @ModelAttribute("updatedPerson") Person updatedPerson) {
+                       @ModelAttribute("updatedPerson") @Valid Person updatedPerson,
+                       BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) return "/people/edit";
+
         peopleService.update(id, updatedPerson);
         return "redirect:/people";
     }

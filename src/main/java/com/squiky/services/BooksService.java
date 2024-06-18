@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class BooksService {
 
     public List<Book> findAll() {
         return booksRepository.findAll().stream()
-                .limit(10)
+                .limit(20)
                 .toList();
     }
 
@@ -79,6 +80,7 @@ public class BooksService {
             Person person = optionalPerson.get();
 
             book.setPerson(person);
+            book.setTakenAt(new Date());
             person.getBookList().add(book);
             booksRepository.save(book);
         }
@@ -94,6 +96,7 @@ public class BooksService {
 
             owner.getBookList().remove(book);
             book.setPerson(null);
+            book.setTakenAt(null);
             booksRepository.save(book);
         }
     }

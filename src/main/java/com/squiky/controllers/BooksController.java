@@ -67,7 +67,7 @@ public class BooksController {
     }
 
     @GetMapping("/new")
-    public String newPage(Model model) {
+    public String createPage(Model model) {
         model.addAttribute("book", new Book());
         return "/books/createNew";
     }
@@ -102,7 +102,7 @@ public class BooksController {
     }
 
     @PatchMapping("/{id}")
-    public String update(@PathVariable int id,
+    public String makeUpdate(@PathVariable int id,
                          @ModelAttribute("book") @Valid Book updatedBook,
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return "/books/edit";
