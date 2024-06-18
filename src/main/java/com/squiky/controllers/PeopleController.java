@@ -40,9 +40,6 @@ public class PeopleController {
     @GetMapping("/{id}")
     public String findById(Model model, @PathVariable int id) {
         Person person = peopleService.findById(id);
-        for (Book book : person.getBookList()) {
-            System.out.println(book.getTitle());
-        }
         model.addAttribute("person", person);
         model.addAttribute("books", person.getBookList());
 

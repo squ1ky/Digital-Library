@@ -4,6 +4,8 @@ import com.squiky.models.Book;
 import com.squiky.services.BooksService;
 import com.squiky.services.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,13 +28,46 @@ public class BooksController {
     }
 
     @GetMapping
-    public String findAll(Model model) {
+    public String findAll(Model model,
+                          @RequestParam(required = false, name = "page") Integer page,
+                          @RequestParam(required = false, name = "books_per_page") Integer booksPerPage,
+                          @RequestParam(required = false, name = "sort_by_year") Boolean sortByYear) {
+        if (page != null && booksPerPage != null) {
+            if (sortByYear != null) {
+                if (sortByYear.equals(true)) {
+                    model.addAttribute("books", booksService.findAll(PageRequest.of(page, booksPerPage, Sort.by("yearOfPublishing"))).getContent());
+                    return "/books/allBooks";
+                }
+            }
+
+            model.addAttribute("books", booksService.findAll(PageRequest.of(page, booksPerPage)).getContent());
+            return "/books/allBooks";
+        }
+
+        if (sortByYear != null) {
+            if (sortByYear.equals(true)) {
+                model.addAttribute("books", booksService.findAll(Sort.by("yearOfPublishing")));
+                return "/books/allBooks";
+            }
+        }
+
         model.addAttribute("books", booksService.findAll());
         return "/books/allBooks";
     }
 
+    @GetMapping("/search")
+    public String searchPage() {
+        return "/books/search";
+    }
+
+    @PostMapping("/search")
+    public String makeSearch(Model model, @RequestParam("title") String title) {
+        model.addAttribute("books", booksService.findByTitleStartingWith(title));
+        return "/books/search";
+    }
+
     @GetMapping("/new")
-    public String newBookPage(Model model) {
+    public String newPage(Model model) {
         model.addAttribute("book", new Book());
         return "/books/createNew";
     }
@@ -90,7 +125,7 @@ public class BooksController {
     }
 
     @PatchMapping("/{id}/make-free")
-    public String makeFree(@PathVariable("id") int bookId) {
+    public String makeAvailable(@PathVariable("id") int bookId) {
         booksService.makeFree(bookId);
         return "redirect:/books";
     }

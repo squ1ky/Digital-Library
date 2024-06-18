@@ -5,6 +5,9 @@ import com.squiky.models.Person;
 import com.squiky.repositories.BooksRepository;
 import com.squiky.repositories.PeopleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +28,17 @@ public class BooksService {
     }
 
     public List<Book> findAll() {
-        return booksRepository.findAll();
+        return booksRepository.findAll().stream()
+                .limit(10)
+                .toList();
+    }
+
+    public Page<Book> findAll(PageRequest pageRequest) {
+        return booksRepository.findAll(pageRequest);
+    }
+
+    public List<Book> findAll(Sort sort) {
+        return booksRepository.findAll(sort);
     }
 
     public Book findById(int id) {
@@ -34,6 +47,10 @@ public class BooksService {
 
     public Book findByTitleAndAuthor(String title, String author) {
         return booksRepository.findByTitleAndAuthor(title, author).orElse(null);
+    }
+
+    public List<Book> findByTitleStartingWith(String title) {
+        return booksRepository.findByTitleStartingWith(title);
     }
 
     @Transactional
