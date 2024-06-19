@@ -21,3 +21,7 @@ This web application, built using Spring MVC and Thymeleaf, offers a comprehensi
 - Hibernate
 - Maven
 ```
+
+Examples:
+### /people
+<img width="399" alt="Снимок экрана 2024-06-19 в 15 26 46" src="https://github.com/squ1ky/Digital-Library/assets/86202668/41f18d45-0104-4453-a4c4-d31e1a6be141">
