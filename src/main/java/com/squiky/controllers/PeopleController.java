@@ -2,6 +2,7 @@ package com.squiky.controllers;
 
 import com.squiky.models.Person;
 import com.squiky.services.PeopleService;
+import com.squiky.util.validators.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,10 +16,12 @@ import javax.validation.Valid;
 public class PeopleController {
 
     private final PeopleService peopleService;
+    private final PersonValidator personValidator;
 
     @Autowired
-    public PeopleController(PeopleService peopleService) {
+    public PeopleController(PeopleService peopleService, PersonValidator personValidator) {
         this.peopleService = peopleService;
+        this.personValidator = personValidator;
     }
 
     @GetMapping
@@ -36,6 +39,8 @@ public class PeopleController {
     @PostMapping("/new")
     public String create(@ModelAttribute("person") @Valid Person person,
                          BindingResult bindingResult) {
+        personValidator.validate(person, bindingResult);
+
         if (bindingResult.hasErrors()) return "/people/createNew";
 
         peopleService.save(person);
@@ -59,9 +64,11 @@ public class PeopleController {
     }
 
     @PatchMapping("/{id}")
-    public String edit(@PathVariable int id,
-                       @ModelAttribute("updatedPerson") @Valid Person updatedPerson,
+    public String makeUpdate(@PathVariable int id,
+                       @ModelAttribute("person") @Valid Person updatedPerson,
                        BindingResult bindingResult) {
+        personValidator.validate(updatedPerson, bindingResult);
+
         if (bindingResult.hasErrors()) return "/people/edit";
 
         peopleService.update(id, updatedPerson);

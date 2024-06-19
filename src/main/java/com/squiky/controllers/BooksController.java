@@ -3,6 +3,7 @@ package com.squiky.controllers;
 import com.squiky.models.Book;
 import com.squiky.services.BooksService;
 import com.squiky.services.PeopleService;
+import com.squiky.util.validators.BookValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -19,12 +20,14 @@ public class BooksController {
 
     private final PeopleService peopleService;
     private final BooksService booksService;
+    private final BookValidator bookValidator;
 
     @Autowired
     public BooksController(BooksService booksService,
-                           PeopleService peopleService) {
+                           PeopleService peopleService, BookValidator bookValidator) {
         this.booksService = booksService;
         this.peopleService = peopleService;
+        this.bookValidator = bookValidator;
     }
 
     @GetMapping
@@ -75,6 +78,8 @@ public class BooksController {
     @PostMapping("/new")
     public String create(@ModelAttribute("book") @Valid Book book,
                          BindingResult bindingResult) {
+        bookValidator.validate(book, bindingResult);
+
         if (bindingResult.hasErrors()) return "/books/createNew";
 
         booksService.save(book);
@@ -105,6 +110,8 @@ public class BooksController {
     public String makeUpdate(@PathVariable int id,
                          @ModelAttribute("book") @Valid Book updatedBook,
                          BindingResult bindingResult) {
+        bookValidator.validate(updatedBook, bindingResult);
+
         if (bindingResult.hasErrors()) return "/books/edit";
 
         booksService.update(id, updatedBook);

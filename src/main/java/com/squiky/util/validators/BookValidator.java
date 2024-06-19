@@ -34,7 +34,7 @@ public class BookValidator implements Validator {
         );
 
         if (bookInStorage != null) {
-            errors.rejectValue("titleAndAuthor", "", "This book is already taken");
+            errors.rejectValue("title", "", "This book is already contained in the library");
         }
     }
 }
